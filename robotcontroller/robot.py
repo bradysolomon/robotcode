@@ -52,15 +52,12 @@ class NonAutonomousRobotWorker():
 
   def _wrist(self, up, off, pin1, pin2):
     if off:
-      print "off"
       GPIO.output(pin1, 0)
       GPIO.output(pin2, 0)
     elif up:
-      print "down"
       GPIO.output(pin1, 0)
       GPIO.output(pin2, 1)
     else:
-      print "up"
       GPIO.output(pin1, 1)
       GPIO.output(pin2, 0)
 
@@ -77,8 +74,6 @@ class NonAutonomousRobotWorker():
     GPIO.setup(WRIST2, GPIO.OUT)
 
     while self.is_thread_running:
-      print self.robot_commands
-      time.sleep(0.5)
       if self.robot_commands is None:
         continue
 
