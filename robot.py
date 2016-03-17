@@ -25,7 +25,7 @@ class NonAutonomousRobotWorker():
 		self.is_thread_running = False
 
 	def get_queued_data(self):
-		return "shit"
+		return "Sensor data"
 
 	####################################################
 	#### MAKE SURE TO NOT TOUCH ANYTHING ABOVE THIS ####
