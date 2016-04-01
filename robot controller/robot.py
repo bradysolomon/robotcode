@@ -34,8 +34,6 @@ class NonAutonomousRobotWorker():
 
 	# self.robot_commands is a dictionary of keys and values #
 	# {u'down_key': False, u'up_key': False, u'left_key': False, u'speed': 50.0, u'right_key': False} #
-	"P9_16"
-	RIGHT_DRIVE = "P9_22"
 
 	# Speed should be 0-100
 	# Forward should be true/false
@@ -72,8 +70,9 @@ class NonAutonomousRobotWorker():
 		Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
 
 		while self.is_thread_running:
-			if not "up_key" in self.robot_commands or not "left_key" in self.robot_commands or not "right_key" in self.robot_commands or not "down_key" in self.robot_commands or not "speed" in self.robot_commands:
+			if self.robot_commands is None:
 				continue
+				
 			if self.robot_commands["up_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and forward
