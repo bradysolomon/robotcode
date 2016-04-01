@@ -72,55 +72,55 @@ class NonAutonomousRobotWorker():
 		while self.is_thread_running:
 			if self.robot_commands is None:
 				continue
-				
+
 			if self.robot_commands["up_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and forward
-					_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
-					_right_motor_move(RIGHT_DRIVE, True, 0)
+					self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, True, 0)
 				elif self.robot_commands["right_key"]:
 					#move robot right and forward
-					_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
-					_left_motor_move(LEFT_DRIVE, True, 0)
+					self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, True, 0)
 				else:
 					#move robot purely forwad
-					_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
-					_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
 			elif self.robot_commands["down_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and backwards
-					_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
-					_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
 				elif self.robot_commands["right_key"]:
 					#move robot right and backwards
-					_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
-					_left_motor_move(LEFT_DRIVE, False, 0)
+					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, False, 0)
 				else:
 					#move robot purely forwad
-					_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
-					_right_motor_move(RIGHT_DRIVE, False, 0)
+					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, False, 0)
 			elif self.robot_commands["right_key"]:
 				#move robot right
-				_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
-				_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+				self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+				self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
 			elif self.robot_commands["left_key"]:
 				#move robot left
-				_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
-				_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+				self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+				self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
 
-def recvtill(socket, marker):
+def recvtill(sock, marker):
     # Receive until marker is found, return received message with trailing marker removed 
     buflist = []
     while True:
-        buf = socket.recv(BUFFER_SIZE, socket.MSG_PEEK)
+        buf = sock.recv(BUFFER_SIZE, socket.MSG_PEEK)
         if not buf:
             raise IOError("Expected more bytes, invalid protocol.")
         index = buf.find(marker)
         if index == -1:
-            socket.recv(len(buf))
+            sock.recv(len(buf))
             buflist.append(buf)
         else:
-            socket.recv(index + len(marker))
+            sock.recv(index + len(marker))
             buflist.append(buf[:index])
             return ''.join(buflist)
 
