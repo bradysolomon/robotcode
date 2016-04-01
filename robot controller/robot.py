@@ -34,13 +34,13 @@ class NonAutonomousRobotWorker():
 
 	# self.robot_commands is a dictionary of keys and values #
 	# {u'down_key': False, u'up_key': False, u'left_key': False, u'speed': 50.0, u'right_key': False} #
-
-	LEFT_DRIVE = "P9_16"
+	"P9_16"
 	RIGHT_DRIVE = "P9_22"
 
 	# Speed should be 0-100
 	# Forward should be true/false
-	def _left_motor_move(self, forward, speed):
+	def _left_motor_move(self, drive_pin, forward, speed):
+
 		speed_percent = 0
 
 		if speed > 0:
@@ -49,11 +49,11 @@ class NonAutonomousRobotWorker():
 		if not forward:
 			speed_percent *= -1.0
 
-		Adafruit_BBIO.PWM.set_duty_cycle(LEFT_DRIVE, 7.5 + speed_percent)
+		Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 7.5 + speed_percent)
 
 	# Speed should be 0-100
 	# Forward should be true/false
-	def _right_motor_move(self, forward, speed):
+	def _right_motor_move(self, drive_pin, forward, speed):
 		speed_percent = 0
 
 		if speed > 0:
@@ -62,48 +62,52 @@ class NonAutonomousRobotWorker():
 		if forward:
 			speed_percent *= -1.0
 
-		Adafruit_BBIO.PWM.set_duty_cycle(RIGHT_DRIVE, 7.5 + speed_percent)
+		Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 7.5 + speed_percent)
 
 	def robot_loop(self):
+		LEFT_DRIVE = "P9_16"
+		RIGHT_DRIVE = "P9_22"
 
 		Adafruit_BBIO.PWM.start(LEFT_DRIVE, 7.5, 50, 0)
 		Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
 
 		while self.is_thread_running:
+			if not "up_key" in self.robot_commands or not "left_key" in self.robot_commands or not "right_key" in self.robot_commands or not "down_key" in self.robot_commands or not "speed" in self.robot_commands:
+				continue
 			if self.robot_commands["up_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and forward
-					_left_motor_move(True, self.robot_commands["speed"])
-					_right_motor_move(True, 0)
+					_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+					_right_motor_move(RIGHT_DRIVE, True, 0)
 				elif self.robot_commands["right_key"]:
 					#move robot right and forward
-					_right_motor_move(True, self.robot_commands["speed"])
-					_left_motor_move(True, 0)
+					_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+					_left_motor_move(LEFT_DRIVE, True, 0)
 				else:
 					#move robot purely forwad
-					_right_motor_move(True, self.robot_commands["speed"])
-					_left_motor_move(True, self.robot_commands["speed"])
+					_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+					_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
 			elif self.robot_commands["down_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and backwards
-					_right_motor_move(False, self.robot_commands["speed"])
-					_left_motor_move(False, self.robot_commands["speed"])
+					_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
 				elif self.robot_commands["right_key"]:
 					#move robot right and backwards
-					_right_motor_move(False, self.robot_commands["speed"])
-					_left_motor_move(False, 0)
+					_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					_left_motor_move(LEFT_DRIVE, False, 0)
 				else:
 					#move robot purely forwad
-					_left_motor_move(False, self.robot_commands["speed"])
-					_right_motor_move(False, 0)
+					_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+					_right_motor_move(RIGHT_DRIVE, False, 0)
 			elif self.robot_commands["right_key"]:
 				#move robot right
-				_right_motor_move(False, self.robot_commands["speed"])
-				_left_motor_move(True, self.robot_commands["speed"])
+				_right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+				_left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
 			elif self.robot_commands["left_key"]:
 				#move robot left
-				_right_motor_move(True, self.robot_commands["speed"])
-				_left_motor_move(False, self.robot_commands["speed"])
+				_right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+				_left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
 
 def recvtill(socket, marker):
     # Receive until marker is found, return received message with trailing marker removed 
