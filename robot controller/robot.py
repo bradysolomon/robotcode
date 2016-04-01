@@ -2,7 +2,7 @@ import threading
 import time
 import socket
 import json
-import Adafruit_BBIO.PWM as PWM
+import ADAFRUIT_BBIO.PWM
 
 SERVER_PORT = 57373
 BUFFER_SIZE = 1024
@@ -18,77 +18,93 @@ class NonAutonomousRobotWorker():
 		self.robot_commands = robot_commands
 
 	def start(self):
-		self._robot_initialization()
 		self.is_thread_running = True
 		self.running_thread = threading.Thread(target=self.robot_loop, args=())
 		self.running_thread.start()
 
 	def stop(self):
-		self._robot_termination()
 		self.is_thread_running = False
 
 	def get_queued_data(self):
-		return "Sensor data"
+		return "shit"
 
 	####################################################
 	#### MAKE SURE TO NOT TOUCH ANYTHING ABOVE THIS ####
 	####################################################
 
 	# self.robot_commands is a dictionary of keys and values #
-	# {u'down_key': False, u'up_key': False, u'left_key': False, u'speed': 1.0, u'right_key': False} #
-	# Speed should be between 0.0-1.0 (0 stopped 1 fast)
+	# {u'down_key': False, u'up_key': False, u'left_key': False, u'speed': 50.0, u'right_key': False} #
 
-	# DUTY CYCLE RANGE = 6.5-7.5-8.5
-	def _robot_initialization(self):
-		self._leftdrive = "P9_14"
-		self._rightdrive = "P9_16"
+	LEFT_DRIVE = "P9_16"
+	RIGHT_DRIVE = "P9_22"
 
-		PWM.start(self._leftdrive)
-		pwm.start(self._rightdrive)
+	# Speed should be 0-100
+	# Forward should be true/false
+	def _left_motor_move(self, forward, speed):
+		speed_percent = 0
 
-	def _robot_termination(self):
-		PWM.close(self._leftdrive)
-		PWM.close(self._rightdrive)
+		if speed > 0:
+			speed_percent = speed / 100.0
+
+		if not forward:
+			speed_percent *= -1.0
+
+		ADAFRUIT_BBIO.PWM.set_duty_cycle(LEFT_DRIVE, 7.5 + speed_percent)
+
+	# Speed should be 0-100
+	# Forward should be true/false
+	def _right_motor_move(self, forward, speed):
+		speed_percent = 0
+
+		if speed > 0:
+			speed_percent = speed / 100.0
+
+		if forward:
+			speed_percent *= -1.0
+
+		ADAFRUIT_BBIO.PWM.set_duty_cycle(RIGHT_DRIVE, 7.5 + speed_percent)
 
 	def robot_loop(self):
+
+		ADAFRUIT_BBIO.PWM.start(LEFT_DRIVE, 7.5, 50, 0)
+		ADAFRUIT_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
+
 		while self.is_thread_running:
-			PWM.set_frequency(self._leftdrive, 50)
-			PWM.set_frequency(self._rightdrive, 50)
-
-			# Speed is a value between 0 and 1
-			speed = self.robot_commands["speed"]
-
 			if self.robot_commands["up_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and forward
-					PWM.set_duty_cycle(self._rightdrive, 7.5 + speed)
+					_left_motor_move(True, self.robot_commands["speed"])
+					_right_motor_move(True, 0)
 				elif self.robot_commands["right_key"]:
 					#move robot right and forward
-					PWM.set_duty_cycle(self._leftdrive, 7.5 + speed)
+					_right_motor_move(True, self.robot_commands["speed"])
+					_left_motor_move(True, 0)
 				else:
 					#move robot purely forwad
-					PWM.set_duty_cycle(self._leftdrive, 7.5 + speed)
-					PWM.set_duty_cycle(self._rightdrive, 7.5 + speed)
+					_right_motor_move(True, self.robot_commands["speed"])
+					_left_motor_move(True, self.robot_commands["speed"])
 			elif self.robot_commands["down_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and backwards
-					PWM.set_duty_cycle(self._rightdrive, 7.5 - speed)
+					_right_motor_move(False, self.robot_commands["speed"])
+					_left_motor_move(False, self.robot_commands["speed"])
 				elif self.robot_commands["right_key"]:
 					#move robot right and backwards
-					PWM.set_duty_cycle(self._leftdrive, 7.5 - speed)
+					_right_motor_move(False, self.robot_commands["speed"])
+					_left_motor_move(False, 0)
 				else:
-					#move robot purely backwards
-					PWM.set_duty_cycle(self._leftdrive, 7.5 - speed)
-					PWM.set_duty_cycle(self._rightdrive, 7.5 - speed)
+					#move robot purely forwad
+					_left_motor_move(False, self.robot_commands["speed"])
+					_right_motor_move(False, 0)
 			elif self.robot_commands["right_key"]:
-				#spin robot right
-				PWM.set_duty_cycle(self._rightdrive, 7.5 - speed)
-				PWM.set_duty_cycle(self._leftdrive, 7.5 + speed)
+				#move robot right
+				_right_motor_move(False, self.robot_commands["speed"])
+				_left_motor_move(True, self.robot_commands["speed"])
 			elif self.robot_commands["left_key"]:
-				#spin robot left
-				PWM.set_duty_cycle(self._rightdrive, 7.5 + speed)
-				PWM.set_duty_cycle(self._leftdrive, 7.5 - speed)
-			
+				#move robot left
+				_right_motor_move(True, self.robot_commands["speed"])
+				_left_motor_move(False, self.robot_commands["speed"])
+
 def recvtill(socket, marker):
     # Receive until marker is found, return received message with trailing marker removed 
     buflist = []
