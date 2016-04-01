@@ -2,7 +2,6 @@ import flask
 import random
 import json
 import socket
-import robot
 
 app = flask.Flask(__name__)
 robot_sock = None

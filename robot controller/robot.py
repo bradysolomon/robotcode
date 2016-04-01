@@ -2,7 +2,7 @@ import threading
 import time
 import socket
 import json
-import ADAFRUIT_BBIO.PWM
+import Adafruit_BBIO.PWM
 
 SERVER_PORT = 57373
 BUFFER_SIZE = 1024
@@ -49,7 +49,7 @@ class NonAutonomousRobotWorker():
 		if not forward:
 			speed_percent *= -1.0
 
-		ADAFRUIT_BBIO.PWM.set_duty_cycle(LEFT_DRIVE, 7.5 + speed_percent)
+		Adafruit_BBIO.PWM.set_duty_cycle(LEFT_DRIVE, 7.5 + speed_percent)
 
 	# Speed should be 0-100
 	# Forward should be true/false
@@ -62,12 +62,12 @@ class NonAutonomousRobotWorker():
 		if forward:
 			speed_percent *= -1.0
 
-		ADAFRUIT_BBIO.PWM.set_duty_cycle(RIGHT_DRIVE, 7.5 + speed_percent)
+		Adafruit_BBIO.PWM.set_duty_cycle(RIGHT_DRIVE, 7.5 + speed_percent)
 
 	def robot_loop(self):
 
-		ADAFRUIT_BBIO.PWM.start(LEFT_DRIVE, 7.5, 50, 0)
-		ADAFRUIT_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
+		Adafruit_BBIO.PWM.start(LEFT_DRIVE, 7.5, 50, 0)
+		Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
 
 		while self.is_thread_running:
 			if self.robot_commands["up_key"]:
