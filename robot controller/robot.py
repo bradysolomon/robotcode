@@ -89,16 +89,16 @@ class NonAutonomousRobotWorker():
 			elif self.robot_commands["down_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and backwards
-					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, False, 0)
 					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
 				elif self.robot_commands["right_key"]:
 					#move robot right and backwards
 					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
 					self._left_motor_move(LEFT_DRIVE, False, 0)
 				else:
-					#move robot purely forwad
+					#move robot purely backwards
 					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
-					self._right_motor_move(RIGHT_DRIVE, False, 0)
+					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
 			elif self.robot_commands["right_key"]:
 				#move robot right
 				self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
@@ -107,6 +107,9 @@ class NonAutonomousRobotWorker():
 				#move robot left
 				self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
 				self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+			else:
+				self._right_motor_move(RIGHT_DRIVE, True, 0)
+				self._left_motor_move(LEFT_DRIVE, False, 0)
 
 def recvtill(sock, marker):
     # Receive until marker is found, return received message with trailing marker removed 
