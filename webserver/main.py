@@ -15,9 +15,9 @@ def control_panel():
 
 @app.route("/control_robot", methods=["POST"])
 def control_robot():
-	mutable_form = flask.request.form.copy()
+  mutable_form = flask.request.form.copy()
 
-	if "keys_pressed" in mutable_form and "speed" in mutable_form:
+  if "keys_pressed" in mutable_form and "speed" in mutable_form:
     speed = float(mutable_form.pop("speed"))
     keys_pressed = json.loads(mutable_form.pop("keys_pressed"))
 
@@ -28,10 +28,10 @@ def control_robot():
     if true_keys_ctr > 2 or (keys_pressed["left_key"] and keys_pressed["right_key"]) or (keys_pressed["up_key"] and keys_pressed["down_key"]):
       return "Failed to move robot."
 
-		send_data_to_robot(json.dumps(control_data))
-		return "Successfully moved robot."
+    send_data_to_robot(json.dumps(control_data))
+    return "Successfully moved robot."
 
-	return "Failed to move robot."	
+  return "Failed to move robot."	
 
 def send_data_to_robot(data):
 	robot_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
