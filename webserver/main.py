@@ -17,19 +17,16 @@ def control_panel():
 def control_robot():
 	mutable_form = flask.request.form.copy()
 
-	if "speed" in mutable_form and "keys_pressed" in mutable_form:
-		speed = float(mutable_form.pop("speed"))
-		keys_pressed = json.loads(mutable_form.pop("keys_pressed"))
+	if "keys_pressed" in mutable_form and "speed" in mutable_form:
+      speed = float(mutable_form.pop("speed"))
+      keys_pressed = json.loads(mutable_form.pop("keys_pressed"))
 
-		true_keys_ctr = 0
-		for value in keys_pressed.values():
-			if value: true_keys_ctr += 1
+      true_keys_ctr = 0
+      for value in keys_pressed.values():
+        if value: true_keys_ctr += 1
 
-		if true_keys_ctr > 2 or (keys_pressed["left_key"] and keys_pressed["right_key"]) or (keys_pressed["up_key"] and keys_pressed["down_key"]):
-			return "Failed to move robot."
-
-		control_data = keys_pressed
-		control_data["speed"] = speed
+      if true_keys_ctr > 2 or (keys_pressed["left_key"] and keys_pressed["right_key"]) or (keys_pressed["up_key"] and keys_pressed["down_key"]):
+        return "Failed to move robot."
 
 		send_data_to_robot(json.dumps(control_data))
 		return "Successfully moved robot."

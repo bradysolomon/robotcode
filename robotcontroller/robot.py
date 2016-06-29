@@ -42,12 +42,12 @@ class NonAutonomousRobotWorker():
 		speed_percent = 0
 
 		if speed > 0:
-			speed_percent = speed / 100.0
+			speed_percent = speed * 3
 
 		if not forward:
 			speed_percent *= -1.0
 
-		Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 7.5 + speed_percent)
+		Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 50 + speed_percent)
 
 	# Speed should be 0-100
 	# Forward should be true/false
@@ -65,48 +65,52 @@ class NonAutonomousRobotWorker():
 	def robot_loop(self):
 		LEFT_DRIVE = "P9_16"
 		RIGHT_DRIVE = "P9_22"
+    SPEED = 0
 
-		Adafruit_BBIO.PWM.start(LEFT_DRIVE, 7.5, 50, 0)
-		Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 7.5, 50, 0)
+		Adafruit_BBIO.PWM.start(LEFT_DRIVE, 50, 333, 0)
+		Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 50, 333, 0)
 
 		while self.is_thread_running:
 			if self.robot_commands is None:
 				continue
 
+      if self.robot_commands["set_speed"]:
+        SPEED = self.robot_commands["set_speed"]
+
 			if self.robot_commands["up_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and forward
-					self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, True, SPEED)
 					self._right_motor_move(RIGHT_DRIVE, True, 0)
 				elif self.robot_commands["right_key"]:
 					#move robot right and forward
-					self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, True, SPEED)
 					self._left_motor_move(LEFT_DRIVE, True, 0)
 				else:
 					#move robot purely forwad
-					self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
-					self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, True, SPEED)
+					self._left_motor_move(LEFT_DRIVE, True, SPEED)
 			elif self.robot_commands["down_key"]:
 				if self.robot_commands["left_key"]:
 					#move robot left and backwards
 					self._right_motor_move(RIGHT_DRIVE, False, 0)
-					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, False, SPEED)
 				elif self.robot_commands["right_key"]:
 					#move robot right and backwards
-					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					self._right_motor_move(RIGHT_DRIVE, False, SPEED)
 					self._left_motor_move(LEFT_DRIVE, False, 0)
 				else:
 					#move robot purely backwards
-					self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
-					self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
+					self._left_motor_move(LEFT_DRIVE, False, SPEED)
+					self._right_motor_move(RIGHT_DRIVE, False, SPEED)
 			elif self.robot_commands["right_key"]:
 				#move robot right
-				self._right_motor_move(RIGHT_DRIVE, False, self.robot_commands["speed"])
-				self._left_motor_move(LEFT_DRIVE, True, self.robot_commands["speed"])
+				self._right_motor_move(RIGHT_DRIVE, False, SPEED)
+				self._left_motor_move(LEFT_DRIVE, True, SPEED)
 			elif self.robot_commands["left_key"]:
 				#move robot left
-				self._right_motor_move(RIGHT_DRIVE, True, self.robot_commands["speed"])
-				self._left_motor_move(LEFT_DRIVE, False, self.robot_commands["speed"])
+				self._right_motor_move(RIGHT_DRIVE, True, SPEED)
+				self._left_motor_move(LEFT_DRIVE, False, SPEED)
 			else:
 				self._right_motor_move(RIGHT_DRIVE, True, 0)
 				self._left_motor_move(LEFT_DRIVE, False, 0)
