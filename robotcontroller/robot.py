@@ -7,6 +7,21 @@ import Adafruit_BBIO.PWM
 SERVER_PORT = 57373
 BUFFER_SIZE = 1024
 
+#H-Bridge constants 
+H11 = "P9_23
+H12 = "P9_25"
+H21 = "P9_27"
+H22 = "P9_41"
+H31 = "P9_12"
+H32 = "P9_30"
+
+#Servo Constants
+Servo_Right = "P9_14"
+Servo_Left = "P9_21"
+Servo_Claw = "P9_42"
+Servo_Claw_OC = #????
+Servo_Gim = #???
+
 class NonAutonomousRobotWorker():
 	def __init__(self):
 		self.robot_commands = None
@@ -63,6 +78,58 @@ class NonAutonomousRobotWorker():
 		Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 7.5 + speed_percent)
 
 	def robot_loop(self):
+		#H_bridge
+		if SH11 = 1:
+			Adafruit_BBIO.GPIO(H11, 1)
+			Adafruit_BBIO.GPIO(H12, 0)
+		if SH12 = 1:
+			Adafruit_BBIO.GPIO(H11, 0)
+			Adafruit_BBIO.GPIO(H12, 1)
+		else:
+			Adafruit_BBIO.GPIO(H11,0)
+			Adafruit_BBIO.GPIO(H12,0)
+		if SH21 = 1:
+			Adafruit_BBIO.GPIO(H21,1)
+			Adafruit_BBIO.GPIO(H22,0)
+		if SH22 = 1:
+			Adafruit_BBIO.GPIO(H21,0)
+			Adafruit_BBIO.GPIO(H22,1)
+		else:
+			Adafruit_BBIO.GPIO(H21,0)
+			Adafruit_BBIO.GPIO(H22,0)
+		if SH31 = 1:
+			Adafruit_BBIO.GPIO(H31,1)
+			Adafruit_BBIO.GPIO(H32,0)
+		if SH32 = 1:
+			Adafruit_BBIO.GPIO(H31,0)
+			Adafruit_BBIO.GPIO(H32,1)
+		else:
+			Adafruit_BBIO.GPIO(H31,0)
+			Adafruit_BBIO.GPIO(H32,0)
+			
+		#servo loop
+		if Servo_LL = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 9)
+		if Servo_LR = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 6)
+		if Servo_RL = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 9)
+		if Servo_RR = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 6)
+		if Servo_CL = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Claw, 9)
+		if Servo CR = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Claw, 6)
+		if Servo CC = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Claw_OC, 6)
+		if Servo CO = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Claw_OC, 9)
+		#Gimbal 
+		if Servo GL = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Gim, 9)
+		if Servo GR = 1:
+			Adafruit_BBIO.PWM.set_duty_cycle(Servo_Gim, 6)
+		
 		LEFT_DRIVE = "P9_16"
 		RIGHT_DRIVE = "P9_22"
     SPEED = 0
