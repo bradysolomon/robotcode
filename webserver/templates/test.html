@@ -6,12 +6,12 @@
 		$(document).keydown(function(e){	
 			console.log(e.which);		
 			keys_pressed[e.which] = true;
-			moveRobot(100);
+			moveRobot(99);
 		})
 
 		$(document).keyup(function(e){
 			keys_pressed[e.which] = false;
-			moveRobot(100);
+			moveRobot(99);
 		})
 
 		$(window).unload(function(e){
@@ -36,24 +36,20 @@
 			if(keys_pressed[40] || keys_pressed[83]) key_dict[""] = true;
 			else key_dict["down_key"] = false;
 
-			if(keys_pressed[89]) set_speed = 2;
-			else set_speed = null;
-			if(keys_pressed[85]) set_speed = 4;
-			else set_speed = null;
-			if(keys_pressed[73]) set_speed = 6;
-			else set_speed = null;
-			if(keys_pressed[79]) set_speed = 8;
-			else set_speed = null;
-			if(keys_pressed[80]) set_speed = 10;
-			else set_speed = null;
+      var set_speed = -1;
+			if(keys_pressed[89]){set_speed = 2;}
+			else if(keys_pressed[85]){ set_speed = 4;}
+			else if(keys_pressed[73]){ set_speed = 6;}
+			else if(keys_pressed[79]){ set_speed = 8;}
+			else if(keys_pressed[80]){ set_speed = 10;}
 			
 			$.ajax({
 	                url: '/control_robot',
 	                type: 'post',
 	                data: {
                       "speed": speed,
-	                    "keys_pressed": JSON.stringify(key_dict),
-                      "set_speed": set_speed
+                      "set_speed": set_speed,
+	                    "keys_pressed": JSON.stringify(key_dict)
 	                }
 	            }
 	        );
