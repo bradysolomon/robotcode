@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
     // Load the pin configuration
     // echo BB-UART4 conflicts with cape-universaln used by pwm.
     // assume the cape-universaln has been set up already and configure the pins.
-    //int ret = system("echo BB-UART4 > /sys/devices/bone_capemgr.9/slots");
-    system("config-pin P9.24 uart");
-    system("config-pin P9.26 uart");
+    int ret = system("echo BB-UART1 > /sys/devices/bone_capemgr.9/slots");
+    //system("config-pin P9.24 uart");
+    //system("config-pin P9.26 uart");
 
     /* Open modem device for reading and writing and not as controlling tty
        because we don't want to get killed if linenoise sends CTRL-C. */
