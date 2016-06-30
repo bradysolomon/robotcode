@@ -2,7 +2,8 @@ import threading
 import time
 import socket
 import json
-import Adafruit_BBIO.PWM
+import Adafruit_BBIO.PWM as PWM
+import Adafruit_BBIO.GPIO as GPIO
 
 SERVER_PORT = 57373
 BUFFER_SIZE = 1024
@@ -47,15 +48,30 @@ class NonAutonomousRobotWorker():
     if not forward:
       speed_percent *= -1.0
 
-    Adafruit_BBIO.PWM.set_duty_cycle(drive_pin, 50 + speed_percent)
+    PWM.set_duty_cycle(drive_pin, 50 + speed_percent)
+
+  def _wrist(self, up, off = False)
+    if off:
+      GPIO.output(WRIST1, 0)
+      GPIO.output(WRIST2, 0)
+    elif up:
+      GPIO.output(WRIST1, 0)
+      GPIO.output(WRIST2, 1)
+    else
+      GPIO.output(WRIST1, 1)
+      GPIO.output(WRIST2, 0)
 
   def robot_loop(self):
     LEFT_DRIVE = "P9_16"
     RIGHT_DRIVE = "P9_22"
+    WRIST1 = "P9_23"
+    WRIST2 = "P9_25"
     SPEED = 0
 
-    Adafruit_BBIO.PWM.start(LEFT_DRIVE, 50, 333, 0)
-    Adafruit_BBIO.PWM.start(RIGHT_DRIVE, 50, 333, 0)
+    PWM.start(LEFT_DRIVE, 50, 333, 0)
+    PWM.start(RIGHT_DRIVE, 50, 333, 0)
+    GPIO.setup(WRIST1, GPIO.OUT)
+    GPIO.setup(WRIST2, GPIO.OUT)
 
     while self.is_thread_running:
       if self.robot_commands is None:
@@ -63,6 +79,13 @@ class NonAutonomousRobotWorker():
 
       if self.robot_commands["set_speed"] > 0:
         SPEED = self.robot_commands["set_speed"]
+
+      if self.robot_commands["k_key"]:
+        self._wrist(True) 
+      elif self.robot_commands["j_key"]:
+        self._wrist(False)
+      else
+        self._wrist(True, True)
 
       if self.robot_commands["up_key"]:
         if self.robot_commands["left_key"]:
