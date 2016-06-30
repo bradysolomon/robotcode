@@ -50,14 +50,14 @@ class NonAutonomousRobotWorker():
 
     PWM.set_duty_cycle(drive_pin, 50 + speed_percent)
 
-  def _wrist(self, up, off = False)
+  def _wrist(self, up, off):
     if off:
       GPIO.output(WRIST1, 0)
       GPIO.output(WRIST2, 0)
     elif up:
       GPIO.output(WRIST1, 0)
       GPIO.output(WRIST2, 1)
-    else
+    else:
       GPIO.output(WRIST1, 1)
       GPIO.output(WRIST2, 0)
 
@@ -81,10 +81,10 @@ class NonAutonomousRobotWorker():
         SPEED = self.robot_commands["set_speed"]
 
       if self.robot_commands["k_key"]:
-        self._wrist(True) 
+        self._wrist(True, False) 
       elif self.robot_commands["j_key"]:
-        self._wrist(False)
-      else
+        self._wrist(False, False)
+      else:
         self._wrist(True, True)
 
       if self.robot_commands["up_key"]:
