@@ -69,6 +69,8 @@ class NonAutonomousRobotWorker():
     RIGHT_DRIVE = "P9_22"
     WRIST1 = "P9_23"
     WRIST2 = "P9_25"
+    Servo_Right = "P9_14"
+    Servo_Left = "P9_21"
     SPEED = 0
 
     PWM.start(LEFT_DRIVE, 50, 333, 0)
