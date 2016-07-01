@@ -69,33 +69,33 @@ class NonAutonomousRobotWorker():
     RIGHT_DRIVE = "P9_22"
     WRIST1 = "P9_23"
     WRIST2 = "P9_25"
-    Servo_Right = "P9_14"
-    Servo_Left = "P9_21"
+    SERVO_RIGHT = "P9_14"
+    SERVO_LEFT = "P9_21"
     SPEED = 0
 
     PWM.start(LEFT_DRIVE, 50, 333, 0)
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
     GPIO.setup(WRIST1, GPIO.OUT)
     GPIO.setup(WRIST2, GPIO.OUT)
-    GPIO.setup(Servo_Left, GPIO.OUT)
-    GPIO.setup(Servo_Right, GPIO.OUT)
+    GPIO.setup(SERVO_LEFT, GPIO.OUT)
+    GPIO.setup(SERVO_RIGHT, GPIO.OUT)
 
 	if Servo_LL = 1:
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 9)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_LEFT, 9)
 	else:
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 7.5)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_LEFT, 7.5)
 	if Servo_LR = 1:
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 6)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_LEFT, 6)
 	else: 
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Left, 7.5)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_LEFT, 7.5)
 	if Servo_RL = 1:
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 9)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_RIGHT, 9)
 	else: 
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 7.5)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_RIGHT, 7.5)
 	if Servo_RR = 1:
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 6)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_RIGHT, 6)
 	else: 
-		Adafruit_BBIO.PWM.set_duty_cycle(Servo_Right, 7.5)
+		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_RIGHT, 7.5)
 		
     while self.is_thread_running:
       print self.robot_commands
