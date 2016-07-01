@@ -66,14 +66,15 @@ class NonAutonomousRobotWorker():
   def robot_loop(self):
     LEFT_DRIVE = "P9_16"
     RIGHT_DRIVE = "P9_22"
-    CLAW = "P9_14"
+    CAMERA_RIGHT = "P8_19"
     WRIST1 = "P9_23"
     WRIST2 = "P9_25"
     SPEED = 4
 
+    PWM.cleanup()
     PWM.start(LEFT_DRIVE, 50, 333, 0)
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
-    PWM.start(CLAW, 7.5, 50, 0)
+    PWM.start(CAMERA_RIGHT, 7.5, 50)
     #GPIO.setup(WRIST1, GPIO.OUT)
     #GPIO.setup(WRIST2, GPIO.OUT)
 
@@ -90,6 +91,13 @@ class NonAutonomousRobotWorker():
         self._wrist(False, False, WRIST1, WRIST2)
       else:
         self._wrist(True, True, WRIST1, WRIST2)
+
+      if self.robot_commands["z_key"]:
+	PWM.set_duty_cycle(CAMERA_RIGHT, 7.6)
+      elif self.robot_commands["x_key"]:
+	PWM.set_duty_cycle(CAMERA_RIGHT, 7.4)
+      else:
+	PWM.set_duty_cycle(CAMERA_RIGHT, 7.5)
 
       if self.robot_commands["up_key"]:
         if self.robot_commands["left_key"]:
@@ -119,20 +127,20 @@ class NonAutonomousRobotWorker():
           self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
       elif self.robot_commands["right_key"]:
         #move robot right
-        self._drive_motor_move(LEFT_DRIVE, True, SPEED)
-        self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
-      elif self.robot_commands["left_key"]:
-        #move robot left
         self._drive_motor_move(LEFT_DRIVE, False, SPEED)
         self._drive_motor_move(RIGHT_DRIVE, True, SPEED)
+      elif self.robot_commands["left_key"]:
+        #move robot left
+        self._drive_motor_move(LEFT_DRIVE, True, SPEED)
+        self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
       else:
         self._drive_motor_move(RIGHT_DRIVE, True, 0)
         self._drive_motor_move(LEFT_DRIVE, False, 0)
 
-      if self.robot_commands["z_key"]:
-        PWM.set_duty_cycle(CLAW, 9)
-      elif self.robot_commands["x_key"]:
-        PWM.set_duty_cycle(CLAW, 6)
+      #if self.robot_commands["z_key"]:
+      #  PWM.set_duty_cycle(CLAW, 9)
+      #elif self.robot_commands["x_key"]:
+      #  PWM.set_duty_cycle(CLAW, 6)
 
 def recvtill(sock, marker):
     # Receive until marker is found, return received message with trailing marker removed 
