@@ -73,9 +73,9 @@ class NonAutonomousRobotWorker():
 
     PWM.start(LEFT_DRIVE, 50, 333, 0)
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
-    #PWM.start(CLAW, 7.5, 50, 0)
-    #GPIO.setup(WRIST1, GPIO.OUT)
-    #GPIO.setup(WRIST2, GPIO.OUT)
+    PWM.start(CLAW, 7.5, 50, 0)
+    GPIO.setup(WRIST1, GPIO.OUT)
+    GPIO.setup(WRIST2, GPIO.OUT)
 
     while self.is_thread_running:
       if self.robot_commands is None:
@@ -129,12 +129,10 @@ class NonAutonomousRobotWorker():
         self._drive_motor_move(RIGHT_DRIVE, True, 0)
         self._drive_motor_move(LEFT_DRIVE, False, 0)
 
-      #if self.robot_commands["z_key"]:
-      #  PWM.set_duty_cycle(CLAW, 9)
-      #elif self.robot_commands["x_key"]:
-      #  PWM.set_duty_cycle(CLAW, 6)
-      #else:
-      #  PWM.set_duty_cycle(CLAW, 7.5)
+      if self.robot_commands["z_key"]:
+        PWM.set_duty_cycle(CLAW, 9)
+      elif self.robot_commands["x_key"]:
+        PWM.set_duty_cycle(CLAW, 6)
 
 def recvtill(sock, marker):
     # Receive until marker is found, return received message with trailing marker removed 
