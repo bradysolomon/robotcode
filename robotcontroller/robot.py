@@ -77,8 +77,8 @@ class NonAutonomousRobotWorker():
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
     GPIO.setup(WRIST1, GPIO.OUT)
     GPIO.setup(WRIST2, GPIO.OUT)
-    GPIO.setup(SERVO_LEFT, GPIO.OUT)
-    GPIO.setup(SERVO_RIGHT, GPIO.OUT)
+    PWM.start(SERVO_LEFT, GPIO.OUT)
+    PWM.start(SERVO_RIGHT, GPIO.OUT)
 
 	if Servo_LL = 1:
 		Adafruit_BBIO.PWM.set_duty_cycle(SERVO_LEFT, 9)
