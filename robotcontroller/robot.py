@@ -74,8 +74,8 @@ class NonAutonomousRobotWorker():
     PWM.start(LEFT_DRIVE, 50, 333, 0)
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
     PWM.start(CLAW, 7.5, 50, 0)
-    GPIO.setup(WRIST1, GPIO.OUT)
-    GPIO.setup(WRIST2, GPIO.OUT)
+    #GPIO.setup(WRIST1, GPIO.OUT)
+    #GPIO.setup(WRIST2, GPIO.OUT)
 
     while self.is_thread_running:
       if self.robot_commands is None:
@@ -119,12 +119,12 @@ class NonAutonomousRobotWorker():
           self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
       elif self.robot_commands["right_key"]:
         #move robot right
-        self._drive_motor_move(LEFT_DRIVE, False, SPEED)
-        self._drive_motor_move(RIGHT_DRIVE, True, SPEED)
-      elif self.robot_commands["left_key"]:
-        #move robot left
         self._drive_motor_move(LEFT_DRIVE, True, SPEED)
         self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
+      elif self.robot_commands["left_key"]:
+        #move robot left
+        self._drive_motor_move(LEFT_DRIVE, False, SPEED)
+        self._drive_motor_move(RIGHT_DRIVE, True, SPEED)
       else:
         self._drive_motor_move(RIGHT_DRIVE, True, 0)
         self._drive_motor_move(LEFT_DRIVE, False, 0)
