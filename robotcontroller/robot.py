@@ -39,7 +39,6 @@ class NonAutonomousRobotWorker():
 	# Speed should be 0-100
 	# Forward should be true/false
   def _drive_motor_move(self, drive_pin, forward, speed):
-
     speed_percent = 0
 
     if speed > 0:
@@ -52,26 +51,31 @@ class NonAutonomousRobotWorker():
 
   def _wrist(self, up, off, pin1, pin2):
     if off:
-      GPIO.output(pin1, 0)
-      GPIO.output(pin2, 0)
+      True
+    #  GPIO.output(pin1, 0)
+    #  GPIO.output(pin2, 0)
     elif up:
-      GPIO.output(pin1, 0)
-      GPIO.output(pin2, 1)
+      True
+    #  GPIO.output(pin1, 0)
+    #  GPIO.output(pin2, 1)
     else:
-      GPIO.output(pin1, 1)
-      GPIO.output(pin2, 0)
+      True
+    #  GPIO.output(pin1, 1)
+    #  GPIO.output(pin2, 0)
 
   def robot_loop(self):
     LEFT_DRIVE = "P9_16"
     RIGHT_DRIVE = "P9_22"
+    CLAW = "P9_14"
     WRIST1 = "P9_23"
     WRIST2 = "P9_25"
-    SPEED = 0
+    SPEED = 4
 
     PWM.start(LEFT_DRIVE, 50, 333, 0)
     PWM.start(RIGHT_DRIVE, 50, 333, 0)
-    GPIO.setup(WRIST1, GPIO.OUT)
-    GPIO.setup(WRIST2, GPIO.OUT)
+    #PWM.start(CLAW, 7.5, 50, 0)
+    #GPIO.setup(WRIST1, GPIO.OUT)
+    #GPIO.setup(WRIST2, GPIO.OUT)
 
     while self.is_thread_running:
       if self.robot_commands is None:
@@ -115,15 +119,22 @@ class NonAutonomousRobotWorker():
           self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
       elif self.robot_commands["right_key"]:
         #move robot right
-        self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
-        self._drive_motor_move(LEFT_DRIVE, True, SPEED)
+        self._drive_motor_move(LEFT_DRIVE, False, SPEED)
+        self._drive_motor_move(RIGHT_DRIVE, True, SPEED)
       elif self.robot_commands["left_key"]:
         #move robot left
-        self._drive_motor_move(RIGHT_DRIVE, True, SPEED)
-        self._drive_motor_move(LEFT_DRIVE, False, SPEED)
+        self._drive_motor_move(LEFT_DRIVE, True, SPEED)
+        self._drive_motor_move(RIGHT_DRIVE, False, SPEED)
       else:
         self._drive_motor_move(RIGHT_DRIVE, True, 0)
         self._drive_motor_move(LEFT_DRIVE, False, 0)
+
+      #if self.robot_commands["z_key"]:
+      #  PWM.set_duty_cycle(CLAW, 9)
+      #elif self.robot_commands["x_key"]:
+      #  PWM.set_duty_cycle(CLAW, 6)
+      #else:
+      #  PWM.set_duty_cycle(CLAW, 7.5)
 
 def recvtill(sock, marker):
     # Receive until marker is found, return received message with trailing marker removed 
