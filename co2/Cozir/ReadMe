@@ -1,0 +1,16 @@
+# CO2 Sensor
+
+  The CO2 Sensor code is set up to read the amount of CO2 that the sensor picks up every second.
+  When running, the code will print out one of two things: "No Life Detected" or "Life".
+  When "Life" is printed, the code will also print the level of co2 measured.
+
+# Wiring the Sensor
+
+  When wiring the sensor, we are currently connecting to the GPIO pins.
+  Our grounding wire connects to pin 6
+  Our wire transmitting power connects to pin 2
+  The TXD wire is connected to pin 8
+  The RXD wire is connected to pin 10
+  In the folder is a picture to show the wiring guide.
+
+  
